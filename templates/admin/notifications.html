@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa; /* Light background for contrast */
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333; /* Darker text for headings */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Remove space between cells */
+            margin-top: 20px; /* Space above the table */
+        }
+        th, td {
+            padding: 12px; /* Space inside cells */
+            border: 1px solid #dee2e6; /* Light border around cells */
+            text-align: left; /* Align text to the left */
+        }
+        th {
+            background-color: #007bff; /* Blue background for header */
+            color: white; /* White text in header */
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light grey for even rows */
+        }
+        tr:hover {
+            background-color: #e9ecef; /* Slightly darker grey on hover */
+        }
+        button {
+            background-color: #dc3545; /* Red button */
+            color: white; /* White text on button */
+            border: none; /* Remove default border */
+            padding: 8px 12px; /* Padding around button text */
+            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 5px; /* Rounded corners */
+        }
+        button:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+        .back-button {
+            background-color: #007bff; /* Blue button */
+            margin-top: 20px; /* Space above the button */
+            display: inline-block; /* Keep it on the same line */
+            text-decoration: none; /* Remove underline */
+            color: white; /* Button text color */
+            padding: 10px 15px; /* Padding for the button */
+            border: none; /* Remove default border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+        .back-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        .flash-messages {
+            margin-bottom: 20px; /* Space below messages */
+            padding: 10px; /* Padding around messages */
+            border-radius: 5px; /* Rounded corners */
+        }
+        .success {
+            background-color: #d4edda; /* Light green for success */
+            color: #155724; /* Darker green text */
+        }
+        .danger {
+            background-color: #f8d7da; /* Light red for danger */
+            color: #721c24; /* Darker red text */
+        }
+        .info {
+            background-color: #d1ecf1; /* Light blue for info */
+            color: #0c5460; /* Darker blue text */
+        }
+    </style>
+</head>
+<body>
+    <h2>Admin Notifications</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                <ul>
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Message</th>
+                <th>Timestamp</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for notification in notifications %}
+                <tr>
+                    <td>{{ notification.message }}</td>
+                    <td>{{ notification.timestamp }}</td>
+                    <td>
+                        <form action="{{ url_for('delete_notification', notification_id=notification.id) }}" method="POST" style="display:inline;">
+                            <button type="submit" onclick="return confirm('Are you sure you want to delete this notification?');">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="{{ url_for('admin_panel') }}" method="GET" style="display:inline;">
+        <button class="back-button" type="submit">Back to Admin Dashboard</button>
+    </form>
+
+</body>
+</html>

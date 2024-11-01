@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #cfecdd;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049; /* Darker green */
+        }
+        .refresh-btn {
+            background-color: #28a745; /* Bright green for refresh button */
+            margin-bottom: 20px;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav ul li {
+            margin-bottom: 10px; /* Space between buttons */
+        }
+        nav ul li a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between; /* Align items to opposite sides */
+            align-items: center; /* Center vertically */
+        }
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .flash-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .flash-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+        }
+        .join {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping */
+            justify-content: space-between; /* Align items to opposite sides */
+            margin-bottom: 10px; /* Add spacing below the join section */
+        }
+        .join input[type="text"], .join button {
+            flex: 1; /* Make input and button take equal space */
+            margin-right: 5px; /* Add space between input and button */
+        }
+        .join button {
+            margin-left: 2px; /* Add space on left for the join button */
+        }
+        .join button:last-child {
+            margin-right: 0; /* Remove margin on the last button */
+        }
+        @media (max-width: 600px) {
+            .join {
+                flex-direction: column; /* Stack input and button on small screens */
+            }
+            .join input[type="text"], .join button {
+                margin-right: 0; /* Reset margin */
+                width: 100%; /* Full width */
+                margin-bottom: 10px; /* Space below each element */
+            }
+            .join button {
+                margin-left: 0; /* Reset margin */
+            }
+        }
+    </style>
+    <script>
+        function copyToClipboard(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Room code copied to clipboard: ' + code);
+            }, (err) => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    </script>
+</head>
+  <div style="text-align: center; clear: both;">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Chathubb Logo" style="width: 100px; margin-bottom: 30px;">
+</div>
+
+
+<body>
+    <h3>Welcome, {{ session.get('user_name', 'Guest') }} from {{ session.get('user_country', 'Unknown Country') }}!</h3>
+
+    <!-- Show Star Level -->
+    <p>Your Star Level: {{ star_level }}</p>
+
+    <!-- Navigation Links -->
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            <li><a href="{{ url_for('view_earnings') }}">Earnings</a></li>
+            <li><a href="{{ url_for('buy_connects') }}">Buy Connects</a></li>
+            <li><a href="{{ url_for('referral') }}">Referral</a></li>
+        </ul>
+    </nav>
+
+    <!-- Refresh Button -->
+    <form method="get" action="{{ url_for('home') }}">
+        <button type="submit" class="refresh-btn">Empty rooms</button>
+    </form>
+
+    <!-- Active Rooms Section -->
+    <h3>Empty rooms</h3>
+    <ul>
+        {% for code, room in active_rooms.items() %}
+            <li>
+                Room {{ code }} - {{ room.members }} member(s)
+                <button onclick="copyToClipboard('{{ code }}')">Copy</button>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Form to Create/Join Room -->
+    <form method="post" class="buttons">
+        <h3>Enter The Chat Room!</h3>
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" value="{{ session.get('user_name', '') }}" readonly />
+        </div>
+        <div class="join">
+            <input type="text" placeholder="Room Code" name="code" value="{{ code }}" />
+            <button type="submit" name="join" value="True">Join Room</button>
+        </div>
+        <button type="submit" name="create" value="True" class="create-btn">Create Room</button>
+        
+        <!-- Display any errors -->
+        {% if error %}
+        <ul>
+            <li>{{ error }}</li>
+        </ul>
+        {% endif %}
+    </form>
+</body>
+</html>

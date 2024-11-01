@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Withdrawals</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            background-color: #f9f9f9; /* Light background */
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            color: #333;
+        }
+        h2 {
+            color: #4CAF50; /* Green */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ffeb3b; /* Yellow */
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .approve-btn, .reject-btn {
+            padding: 5px 10px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .approve-btn {
+            background-color: #27ae60; /* Green for approve */
+        }
+        .reject-btn {
+            background-color: #c0392b; /* Red for reject */
+        }
+        .flash-message {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda; /* Light green */
+            color: #155724;
+        }
+        .danger {
+            background-color: #f8d7da; /* Light red */
+            color: #721c24;
+        }
+        .back-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            background-color: #f44336; /* Red for back button */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-button" onclick="goToAdminPanel()">Back to Admin Panel</button>
+
+<h2>Manage Withdrawal Requests</h2>
+
+<!-- Flash Messages -->
+<div id="flash-messages">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>User Email</th>  <!-- Display User Email -->
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Payment Details</th>  <!-- New column for Payment Details -->
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in withdrawal_requests %}
+        <tr>
+            <td>{{ request.email }}</td>  <!-- Display user email -->
+            <td>${{ request.request.amount }}</td>  <!-- Display withdrawal amount -->
+            <td>{{ request.request.status }}</td>  <!-- Display withdrawal status -->
+            <td>{{ request.payment_details }}</td>  <!-- Display payment details -->
+            <td>
+                <form method="POST">
+                    <input type="hidden" name="request_id" value="{{ request.request.id }}">
+                    {% if request.request.status == 'Pending' %}
+                    <button type="submit" name="action" value="approve" class="approve-btn">Approve</button>
+                    <button type="submit" name="action" value="reject" class="reject-btn">Reject</button>
+                    {% else %}
+                    <span class="processed">Processed</span>
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function goToAdminPanel() {
+        window.location.href = "{{ url_for('admin_panel') }}";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View Messages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 20px;
+            color: #333;
+        }
+        h2 {
+            color: #4CAF50; /* Green */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #ffeb3b; /* Yellow */
+            color: #333;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .back-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            background-color: #f44336; /* Red */
+            margin-bottom: 20px; /* Space below the button */
+        }
+        .back-button:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
+        .form-control {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: calc(100% - 120px); /* Full width minus button */
+            margin-right: 10px; /* Space between input and button */
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            background-color: #2196F3; /* Blue */
+        }
+        .btn:hover {
+            background-color: #1976D2; /* Darker blue on hover */
+        }
+        td[colspan="3"] {
+            text-align: center;
+            font-weight: bold;
+            color: #f44336; /* Red to match the theme */
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .form-control {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+  <button class="back-button" onclick="window.location.href='{{ url_for('admin_panel') }}'">Back to Admin Panel</button>
+
+
+
+<h2>Messages</h2>
+
+<!-- Search Form -->
+<form method="GET" class="search-container" style="margin-bottom: 20px;">
+    <input type="text" name="search" class="form-control" placeholder="Search by Email " value="{{ search }}" required>
+    <button type="submit" class="btn">Search</button>
+</form>
+
+<!-- Messages Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Sender Email</th>
+            <th>Message Content</th>
+            <th>Date & Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for message in messages %}
+        <tr>
+            <td>{{ message.sender_email }}</td>
+            <td>{{ message.content }}</td>
+            <td>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">No messages found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+ 
+</script>
+
+</body>
+</html>

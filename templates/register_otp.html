@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            text-align: center;
+            margin: 0 5px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .resend {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #007bff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>OTP Verification</h1>
+        <p>Please enter the OTP sent to your mobile number</p>
+        <div>
+            <input type="text" maxlength="1" onkeyup="moveFocus(this, 'next')" />
+            <input type="text" maxlength="1" onkeyup="moveFocus(this, 'next')" />
+            <input type="text" maxlength="1" onkeyup="moveFocus(this, 'next')" />
+            <input type="text" maxlength="1" onkeyup="moveFocus(this, 'next')" />
+        </div>
+        <button onclick="verifyOTP()">Verify OTP</button>
+        <div class="resend" onclick="resendOTP()">Resend OTP</div>
+    </div>
+
+    <script>
+        function moveFocus(current, direction) {
+            const nextInput = direction === 'next' ? current.nextElementSibling : current.previousElementSibling;
+            if (nextInput && current.value) {
+                nextInput.focus();
+            }
+        }
+
+        function verifyOTP() {
+            // Logic for OTP verification goes here
+            alert('OTP Verified!');
+        }
+
+        function resendOTP() {
+            // Logic for resending OTP goes here
+            alert('OTP Resent!');
+        }
+    </script>
+
+</body>
+</html>
